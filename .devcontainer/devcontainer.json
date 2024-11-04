@@ -1,5 +1,5 @@
 {
-    "name": "force_platform",
+    "name": "force-platform-app-dev",
     "build": {
       "dockerfile": "../Dockerfile.dev",
       "context": ".."
