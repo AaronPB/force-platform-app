@@ -1,0 +1,16 @@
+# App framework
+streamlit
+
+# Sensor APIs
+opencv-python
+Phidget22
+
+# Data modules
+plotly
+numpy
+scikit-learn
+scipy
+
+# Others
+loguru
+PyYAML

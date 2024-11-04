@@ -1,0 +1,29 @@
+{
+    "name": "force_platform",
+    "build": {
+      "dockerfile": "../Dockerfile.dev",
+      "context": ".."
+    },
+    "runArgs": [
+      "--privileged", // Necessary to access multiple serial ports
+      "-v", "/dev:/dev" // To access all USB dirs
+      // Replace --privileged and total volume access with this line, to put only specific routes.
+      // Requires to put manually all sensor ports.
+      // "--device=/dev/ttyUSB0"
+    ],
+    // Configure tool-specific properties.
+    "customizations": {
+      // Configure properties specific to VS Code.
+      "vscode": {        
+        // Add the IDs of extensions you want installed when the container is created.
+        "extensions": [
+          "ms-python.black-formatter",
+          "ms-python.vscode-pylance",
+          "ms-python.python",
+          "ms-python.debugpy",
+          "naumovs.color-highlight",
+          "davidanson.vscode-markdownlint"
+        ]
+      }
+    }
+  }
