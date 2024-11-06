@@ -633,6 +633,17 @@ def homePage():
     st.write(
         "Check the following documentation if you are not familiar with the application."
     )
+    with st.expander("About the software", icon=":material/privacy_tip:"):
+        st.markdown(
+            f"""
+            This app is made by [AaronPB](https://github.com/AaronPB) with streamlit version {st.__version__}, 
+            under the [3-Clause BSD](https://opensource.org/license/bsd-3-clause) 
+            and [GNU GPL v3](https://www.gnu.org/licenses/gpl-3.0.html) licenses.
+
+            A preliminary version of this software with QT (for Linux distros only) can be installed, going to the  
+            [force_platform](https://github.com/AaronPB/force_platform) public repository.
+            """
+        )
 
     st.header("General overview")
 
