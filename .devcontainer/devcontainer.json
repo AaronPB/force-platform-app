@@ -5,6 +5,7 @@
       "context": ".."
     },
     "runArgs": [
+      "--name", "vsc-devcontainer-force-platform-app",
       "--privileged", // Necessary to access multiple serial ports
       "-v", "/dev:/dev" // To access all USB dirs
       // Replace --privileged and total volume access with this line, to put only specific routes.
