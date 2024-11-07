@@ -231,13 +231,37 @@ def data_visualization():
             )
         )
     if "butter_fc_value" not in st.session_state:
+        # Get stored FC in config
+        st.session_state.butter_fc_value = st.session_state.config_mngr.getConfigValue(
+            ConfigPaths.FILTER_FC.value, st.session_state.butter_fs_value
+        )
+        # Operate to check wn
         # wn bounds: 0 < wn < 1
         # wn = fc / (0.5*fs)
-        st.session_state.butter_fc_value = float(
-            (st.session_state.butter_fs_value - 0.02) / 2
-        )
+        wn = st.session_state.butter_fc_value / (0.5 * st.session_state.butter_fs_value)
+        # If wn is out of bounds, replace saved FC value with max possible value
+        if wn <= 0 or wn >= 1:
+            st.session_state.butter_fc_value = float(
+                (st.session_state.butter_fs_value - 0.02) / 2
+            )
+            st.session_state.config_mngr.setConfigValue(
+                ConfigPaths.FILTER_FC.value, st.session_state.butter_fc_value
+            )
     if "butter_order_value" not in st.session_state:
-        st.session_state.butter_order_value = 6
+        st.session_state.butter_order_value = (
+            st.session_state.config_mngr.getConfigValue(
+                ConfigPaths.FILTER_ORDER.value, 6
+            )
+        )
+        # If order is out of bounds, replace saved order value with max possible value
+        if (
+            st.session_state.butter_order_value < 2
+            or st.session_state.butter_order_value > 6
+        ):
+            st.session_state.butter_order_value = 6
+            st.session_state.config_mngr.setConfigValue(
+                ConfigPaths.FILTER_ORDER.value, st.session_state.butter_order_value
+            )
 
     st.subheader("Data visualization")
 
@@ -281,15 +305,17 @@ def data_visualization():
             disabled=True,
         )
         # Check if butter_fc is out of bounds, if butter_fs has been modified
-        fs_value = st.session_state.butter_fc_value
-        if (butter_fs - 0.01) < fs_value:
-            fs_value = float((butter_fs - 0.02) / 2)
+        fc_value = st.session_state.butter_fc_value
+        wn = fc_value / (0.5 * butter_fs)
+        if wn <= 0 or wn >= 1:
+            fc_value = float((butter_fs - 0.02) / 2)
+            logger.debug(f"Fixing filter FC value to {fc_value}")
         butter_fc = butter_col_2.number_input(
             label="Cutoff frequency (Hz)",
             key="number_input_butter_fc",
             min_value=1.0,
             max_value=butter_fs - 0.01,  # Max rate: f = 1/t - 0.01
-            value=fs_value,
+            value=fc_value,
         )
         butter_order = settings_col_2.number_input(
             label="Filter order",
@@ -311,6 +337,12 @@ def data_visualization():
             st.session_state.butter_order_value = butter_order
             st.session_state.data_mngr.applyButterFilter(
                 butter_fs, butter_fc, butter_order
+            )
+            st.session_state.config_mngr.setConfigValue(
+                ConfigPaths.FILTER_FC.value, st.session_state.butter_fc_value
+            )
+            st.session_state.config_mngr.setConfigValue(
+                ConfigPaths.FILTER_ORDER.value, st.session_state.butter_order_value
             )
 
     # Generate figure with selected option
