@@ -594,7 +594,7 @@ def configDetails() -> None:
     group_platform_col_2.image(
         image="images/platform.png",
         caption="Platform sensor locations",
-        use_column_width=True,
+        use_container_width=True,
     )
     group_tab_platform.dataframe(
         pd.DataFrame(
@@ -627,7 +627,7 @@ def homePage():
     _, img_col, _ = st.columns([0.2, 0.6, 0.2])
     img_col.image(
         image="images/force_platform_logo.png",
-        use_column_width=True,
+        use_container_width=True,
     )
     st.title("Welcome to Force Platform Reader")
     st.write(
