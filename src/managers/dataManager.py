@@ -28,26 +28,17 @@ class DataManager:
         self.df_filtered: pd.DataFrame = pd.DataFrame()
         # Data structures for figures
         self.sensor_figure_structs: dict[str, tuple[list[str], str]] = {}
-        self.platform_figure_structs: dict[str, list[str]] = {}
+        self.platform_figure_structs: dict[
+            str, tuple[list[str], list[str], list[str]]
+        ] = {}
         # Sensor header suffixes
         self.imu_ang_headers: list[str] = ["qx", "qy", "qz", "qw"]
         self.imu_vel_headers: list[str] = ["wx", "wy", "wz"]
         self.imu_acc_headers: list[str] = ["x_acc", "y_acc", "z_acc"]
         # Platform loadcell required strings for platform figures
-        self.platform_force_names: list[str] = [
-            "X_1",
-            "X_2",
-            "X_3",
-            "X_4",
-            "Y_1",
-            "Y_2",
-            "Y_3",
-            "Y_4",
-            "Z_1",
-            "Z_2",
-            "Z_3",
-            "Z_4",
-        ]
+        self.platform_fx_names: list[str] = ["X_1", "X_2", "X_3", "X_4"]
+        self.platform_fy_names: list[str] = ["Y_1", "Y_2", "Y_3", "Y_4"]
+        self.platform_fz_names: list[str] = ["Z_1", "Z_2", "Z_3", "Z_4"]
 
     def clearDataFrames(self) -> None:
         self.df_raw: pd.DataFrame = pd.DataFrame()
@@ -69,11 +60,16 @@ class DataManager:
             # Check if group is a platform for specific plots
             if group.getType() == SGTypes.GROUP_PLATFORM:
                 valid_sensors = self.getPlatformGroupValidSensors(group)
-                if len(valid_sensors) > 0:
+                if any(len(sensor_forces) > 0 for sensor_forces in valid_sensors):
                     self.platform_figure_structs[group.getName() + "_FORCES"] = (
                         valid_sensors
                     )
-                if len(valid_sensors) == 12:
+                # Check 2 Fx, 2 Fy and 4 Fz sensors available for valid COP
+                if (
+                    len(valid_sensors[0]) == 2
+                    and len(valid_sensors[1]) == 2
+                    and len(valid_sensors[2]) == 4
+                ):
                     self.platform_figure_structs[group.getName() + "_COP"] = (
                         valid_sensors
                     )
@@ -144,17 +140,25 @@ class DataManager:
                 return True
         return False
 
-    def getPlatformGroupValidSensors(self, group: SensorGroup) -> list[str]:
-        valid_sensors: list = []
+    def getPlatformGroupValidSensors(
+        self, group: SensorGroup
+    ) -> tuple[list[str], list[str], list[str]]:
+        fx_sensors = []
+        fy_sensors = []
+        fz_sensors = []
         sensors = group.getSensors(
             only_available=True, sensor_type=STypes.SENSOR_LOADCELL
         ).values()
         if not sensors:
-            return valid_sensors
+            return ([], [], [])
         for sensor in sensors:
-            if any(name in sensor.getName() for name in self.platform_force_names):
-                valid_sensors.append(sensor.getName())
-        return valid_sensors
+            if any(name in sensor.getName() for name in self.platform_fx_names):
+                fx_sensors.append(sensor.getName())
+            elif any(name in sensor.getName() for name in self.platform_fy_names):
+                fy_sensors.append(sensor.getName())
+            elif any(name in sensor.getName() for name in self.platform_fz_names):
+                fz_sensors.append(sensor.getName())
+        return (fx_sensors, fy_sensors, fz_sensors)
 
     # Getters
 
@@ -225,26 +229,13 @@ class DataManager:
 
     # - Platform group methods
 
-    # Expected input format: name_1, name_2, name_3, name_4
-    # Output: x1, x2, x3, x4
-    def getPlatformForces(self, sensor_names: list[str]) -> pd.DataFrame:
-        df_list: list[pd.DataFrame] = []
-        for sensor_name in sensor_names:
-            sign = 1
-            for key in self.forces_sign.keys():
-                if key in sensor_name:
-                    sign = self.forces_sign[key]
-                    break
-            df_list.append(self.getForce(sensor_name, sign))
-        return pd.concat(df_list)
-
     def getPlatformCOP(
         self, df_fx: pd.DataFrame, df_fy: pd.DataFrame, df_fz: pd.DataFrame
     ) -> tuple[pd.Series, pd.Series]:
         # Platform dimensions
         lx = 508  # mm
         ly = 308  # mm
-        h = 20  # mm
+        h = 50.5  # mm
         # Get sum forces
         fx = df_fx.sum(axis=1)
         fy = df_fy.sum(axis=1)
@@ -264,10 +255,10 @@ class DataManager:
             lx
             / 2
             * (
-                -df_fz.iloc[:, 0]
-                + df_fz.iloc[:, 1]
-                + df_fz.iloc[:, 2]
-                - df_fz.iloc[:, 3]
+                df_fz.iloc[:, 0]
+                - df_fz.iloc[:, 1]
+                - df_fz.iloc[:, 2]
+                + df_fz.iloc[:, 3]
             )
         )
         # Get COP
@@ -341,10 +332,10 @@ class DataManager:
             return GeneralFigure("Platform figure", "Not specified").getFigure(
                 pd.Series([0]), pd.Series([0])
             )
-        keys = self.platform_figure_structs[platform_name]
-        df_fx = self.df_filtered[keys[:4]]
-        df_fy = self.df_filtered[keys[4:8]]
-        df_fz = self.df_filtered[keys[8:12]]
+        keys_tuple = self.platform_figure_structs[platform_name]
+        df_fx = self.df_filtered[keys_tuple[0]]
+        df_fy = self.df_filtered[keys_tuple[1]]
+        df_fz = self.df_filtered[keys_tuple[2]]
         if "_COP" in platform_name:
             [copx, copy] = self.getPlatformCOP(df_fx, df_fy, df_fz)
             [ellipx, ellipy, area] = self.getEllipseFromCOP([copx, copy])
