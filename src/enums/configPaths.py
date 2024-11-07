@@ -11,7 +11,7 @@ class ConfigPaths(Enum):
     RECORD_INTERVAL_MS = "settings.recording.data_interval_ms"
     RECORD_TARE_AMOUNT = "settings.recording.tare_data_amount"
 
-    FILTER_FC = "settings.filter.fc"
+    FILTER_FC = "settings.filter.fc_hz"
     FILTER_ORDER = "settings.filter.order"
 
     # Sensors

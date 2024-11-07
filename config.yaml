@@ -8,7 +8,7 @@ settings:
     data_interval_ms: 10
     tare_data_amount: 300
   filter:
-    fc: 5.00
+    fc_hz: 5.00
     order: 6
 sensor_groups:
   platform_1:

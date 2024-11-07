@@ -298,9 +298,14 @@ def configDetails() -> None:
           config:
             name: Custom config
             version: 2.0
+          test:
+            name: Test name
           recording:
             data_interval_ms: 10
             tare_data_amount: 300
+          filter:
+            fc_hz: 5.00
+            order: 6
         sensor_groups:
           group_id:
             name: Group name
