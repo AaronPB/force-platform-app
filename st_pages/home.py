@@ -623,7 +623,25 @@ def figureDetails() -> None:
     st.subheader("Sensor and sensor groups figures")
     st.markdown(
         """
-        WIP
+        The software provides graphical data visualization. There are two types:
+        - Sensor figures: individual sensor data display. There are some figures, such as IMU data, which contains grouped data.
+        - Sensor group figures: these figures are build depending on the group context.
+        For instance, a `PLATFORM_GROUP` sensor group offers two figure types: global forces and COP displacement.
+        """
+    )
+    st.subheader("Customize the figures")
+    st.markdown(
+        """
+        Thanks to `plotly` [configuration options](https://plotly.com/python/configuration-options/),
+        you can zoom into a specific range and even include extra forms such as rectangles, circles or free lines
+        (credit to [Juan Miguel Serrano](https://github.com/juan11iguel)).
+        Check out the available options at the modebar, at the upper-right corner of the figure.
+        """
+    )
+    st.subheader("Export the generated figures")
+    st.markdown(
+        """
+        Above the figure you can modify the file export name and format. To export it, clic the :material/photo_camera: camera option in the figure modebar, at the upper-right corner.
         """
     )
 
