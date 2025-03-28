@@ -222,6 +222,25 @@ def control_panel():
 
 
 def data_visualization():
+    # Plotly configuration options
+    if "plotly_config" not in st.session_state:
+        st.session_state.plotly_config = dict(
+            toImageButtonOptions={
+                "format": "svg",
+                "filename": "test_figure",
+            },
+            modeBarButtonsToAdd=[
+                "drawline",
+                "drawopenpath",
+                "drawclosedpath",
+                "drawcircle",
+                "drawrect",
+                "eraseshape",
+            ],
+            modeBarButtonsToRemove=[
+                "autoScale2d"  # Causes problems with plotly_resampler, equivalent to double-clicking on the plot
+            ],
+        )
     # Variables states
     if "butter_fs_value" not in st.session_state:
         st.session_state.butter_fs_value = float(
@@ -268,7 +287,7 @@ def data_visualization():
     sensor_options = st.session_state.data_mngr.getSensorFigureOptions()
     platform_options = st.session_state.data_mngr.getPlatformFigureOptions()
 
-    with st.expander("Figure and filter settings", icon=":material/dataset:"):
+    with st.expander("Figure type and filter settings", icon=":material/dataset:"):
         settings_col_1, settings_col_2 = st.columns(2)
         settings_col_1.subheader("Recorded data")
         figure_type = settings_col_1.radio(
@@ -345,8 +364,33 @@ def data_visualization():
                 ConfigPaths.FILTER_ORDER.value, st.session_state.butter_order_value
             )
 
+    figure_general_col_1, figure_general_col_2 = st.columns(2)
+    figure_export_name = figure_general_col_1.text_input(
+        label="Figure export file name",
+        value=st.session_state.plotly_config["toImageButtonOptions"]["filename"],
+        help="Set a file name for the downloaded file.",
+    )
+    figure_export_format = figure_general_col_2.selectbox(
+        label="Figure export file format",
+        options=["png", "jpeg", "svg", "webp"],
+        index=0,
+        placeholder="Choose an export option",
+    )
+
     # Generate figure with selected option
+    st.session_state.plotly_config["toImageButtonOptions"][
+        "filename"
+    ] = figure_export_name
+    st.session_state.plotly_config["toImageButtonOptions"][
+        "format"
+    ] = figure_export_format
     if figure_type == "Sensor":
-        st.plotly_chart(st.session_state.data_mngr.getSensorFigure(figure_option))
+        st.plotly_chart(
+            st.session_state.data_mngr.getSensorFigure(figure_option),
+            config=st.session_state.plotly_config,
+        )
     else:
-        st.plotly_chart(st.session_state.data_mngr.getPlatformFigure(figure_option))
+        st.plotly_chart(
+            st.session_state.data_mngr.getPlatformFigure(figure_option),
+            config=st.session_state.plotly_config,
+        )
