@@ -8,6 +8,11 @@ on:
   push:
     branches:
     - master
+    paths:
+    - 'app.py'
+    - 'pytest.ini'
+    - 'src/*'
+    - 'tests/*'
 
 jobs:
   test:

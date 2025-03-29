@@ -5,9 +5,17 @@ on:
     branches:
     - master
     - develop
+    paths:
+    - 'app.py'
+    - 'src/*'
+    - 'tests/*'
   push:
     branches:
     - master
+    paths:
+    - 'app.py'
+    - 'src/*'
+    - 'tests/*'
 
 jobs:
   lint:
