@@ -233,12 +233,12 @@ class DataManager:
         self, df_fx: pd.DataFrame, df_fy: pd.DataFrame, df_fz: pd.DataFrame
     ) -> tuple[pd.Series, pd.Series]:
         # Platform dimensions
-        lx = 508  # mm
-        ly = 308  # mm
-        h = 50.5  # mm
+        lx = 506  # mm
+        ly = 306  # mm
+        h = 50.6  # mm
         # Get sum forces
-        fx = df_fx.sum(axis=1)
-        fy = df_fy.sum(axis=1)
+        fx = df_fx.iloc[:, 0] - df_fx.iloc[:, 1]
+        fy = df_fy.iloc[:, 0] - df_fy.iloc[:, 1]
         fz = df_fz.sum(axis=1)
         # Operate
         mx = (
@@ -250,6 +250,7 @@ class DataManager:
                 + df_fz.iloc[:, 2]
                 + df_fz.iloc[:, 3]
             )
+            + h * fy
         )
         my = (
             lx
@@ -260,10 +261,12 @@ class DataManager:
                 - df_fz.iloc[:, 2]
                 + df_fz.iloc[:, 3]
             )
+            - h * fx
         )
         # Get COP
-        cop_x = (-h * fx - my) / fz
-        cop_y = (-h * fy + mx) / fz
+        cop_x = -my / fz
+        cop_y = mx / fz
+        # Get relative COP
         cop_x = cop_x - np.mean(cop_x)
         cop_y = cop_y - np.mean(cop_y)
         return [cop_x, cop_y]
