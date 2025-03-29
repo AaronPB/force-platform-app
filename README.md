@@ -24,14 +24,14 @@ The documentation is available within the software, making it convenient to chec
 
 ## Simple setup
 
-1. Install [Docker](https://docs.docker.com/engine/install/)
-2. Pull the docker image from DockerHub or the GitHub Container Registry.
+1. Install [Docker](https://docs.docker.com/engine/install/).
+2. Pull the docker image from [DockerHub](https://hub.docker.com/r/aaronrpb/force-platform-app) or the GitHub Container Registry.
 3. Start the container and try it out by going to the specified port.
 
 Here is a setup example to run it locally through commands, in a Linux-based distro:
 
 ```bash
-docker pull WIP
+docker pull aaronrpb/force-platform-app
 docker run -d --name example_app --device /dev/usb:/dev/usb -p 8501:8501 force-platform-app
 ```
 
