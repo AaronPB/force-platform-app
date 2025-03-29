@@ -31,7 +31,7 @@ The documentation is available within the software, making it convenient to chec
 Here is a setup example to run it locally through commands, in a Linux-based distro:
 
 ```bash
-docker pull aaronrpb/force-platform-app
+docker pull aaronrpb/force-platform-app:latest
 docker run -d --name example_app --device /dev/usb:/dev/usb -p 8501:8501 force-platform-app
 ```
 
