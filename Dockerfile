@@ -1,5 +1,13 @@
 FROM ubuntu:22.04
-LABEL maintainer="AaronPB"
+LABEL maintainer="AaronPB <aaron.poyatos@ual.es>"
+LABEL version="1.0.0"
+LABEL description="A dockerized streamlit app of the Force Platform Reader software."
+LABEL license="GPL-3.0-or-later"
+LABEL repository="https://github.com/AaronPB/force-platform-app"
+LABEL org.opencontainers.image.source="https://github.com/AaronPB/force-platform-app"
+LABEL org.opencontainers.image.licenses="GPL-3.0-or-later"
+LABEL org.opencontainers.image.title="force-platform-app"
+LABEL org.opencontainers.image.description="A dockerized streamlit app of the Force Platform Reader software."
 
 # Install base dependencies and Python 3.10 (default on ubuntu 22.04)
 RUN apt-get update && apt-get install -y \
