@@ -5,12 +5,16 @@ on:
     branches:
     - master
     - develop
+  push:
+    branches:
+    - master
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out the repository
+        uses: actions/checkout@v4
       
       - name: Check project src folder
         uses: psf/black@stable

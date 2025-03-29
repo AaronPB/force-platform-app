@@ -5,6 +5,9 @@ on:
     branches:
     - master
     - develop
+  push:
+    branches:
+    - master
 
 jobs:
   test:
@@ -14,7 +17,8 @@ jobs:
         python-version: ['3.10', '3.11']
     
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out the repository
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
