@@ -1,89 +1,97 @@
 # -*- coding: utf-8 -*-
 
 import pytest
-import os
+from unittest.mock import mock_open
 from src.managers.configManager import ConfigManager
-from src.enums.configPaths import ConfigPaths as CfgPaths
 
 
 # General mocks, builders and fixtures
 
 
-DEFAULT_CONFIG_PATH = os.path.join(
-    os.path.dirname(__file__), "files", "default_config.yaml"
-)
-CUSTOM_CONFIG_PATH = os.path.join(
-    os.path.dirname(__file__), "files", "custom_config.yaml"
-)
-OTHER_CUSTOM_CONFIG_PATH = os.path.join(
-    os.path.dirname(__file__), "files", "other_custom_config.yaml"
-)
-NON_EXISTING_CONFIG_PATH = os.path.join(
-    os.path.dirname(__file__), "files", "non_existing_config.yaml"
-)
+@pytest.fixture
+def default_config():
+    return "key1: value1\ngroup:\n  subkey: subvalue"
 
 
 @pytest.fixture
-def config_manager() -> ConfigManager:
-    cfg_mngr = ConfigManager()
-    # Rewrite config paths to the test default_config file
-    cfg_mngr.default_config_path = DEFAULT_CONFIG_PATH
-    cfg_mngr.selected_config_path = DEFAULT_CONFIG_PATH
-    cfg_mngr.loadConfigFile(DEFAULT_CONFIG_PATH)
-    return cfg_mngr
+def custom_config():
+    return "key1: custom_value\ngroup:\n  subkey: custom_subvalue"
 
 
-# Tests
+def test_load_default_config(mocker, default_config):
+    """Tests that config.yaml is loaded when custom.yaml does not exist"""
+    mocker.patch("os.path.exists", return_value=False)
+    mocker.patch("builtins.open", mock_open(read_data=default_config))
+
+    config_manager = ConfigManager()
+
+    assert config_manager.getConfigValue("key1") == "value1"
+    assert config_manager.getCurrentFilePath().endswith("config.yaml")
 
 
-def test_manager_init() -> None:
-    cfg_mngr = ConfigManager()
-    assert cfg_mngr.config_dict is not None
+def test_load_custom_config(mocker, custom_config):
+    """Tests that custom.yaml is loaded when it exists"""
+    mocker.patch("os.path.exists", return_value=True)
+    mocker.patch("builtins.open", mock_open(read_data=custom_config))
+
+    config_manager = ConfigManager()
+
+    assert config_manager.getConfigValue("key1") == "custom_value"
+    assert config_manager.getCurrentFilePath().endswith("custom.yaml")
 
 
-def test_load_custom_config(config_manager: ConfigManager) -> None:
-    config_manager.loadConfigFile(CUSTOM_CONFIG_PATH)
-    assert os.path.samefile(config_manager.getCurrentFilePath(), CUSTOM_CONFIG_PATH)
-    # Check that custom path has been saved in default config
-    config_manager.selected_config_path = DEFAULT_CONFIG_PATH
-    config_manager.loadConfig(DEFAULT_CONFIG_PATH)
-    saved_path = config_manager.getConfigValue(CfgPaths.CUSTOM_CONFIG_PATH.value, None)
-    assert os.path.samefile(saved_path, CUSTOM_CONFIG_PATH)
-    # Remove custom config path in default yaml at end of test
-    config_manager.setConfigValue(CfgPaths.CUSTOM_CONFIG_PATH.value, None)
+def test_get_config_value(mocker, default_config):
+    """Tests retrieving values from config.yaml"""
+    mocker.patch("os.path.exists", return_value=False)
+    mocker.patch("builtins.open", mock_open(read_data=default_config))
+
+    config_manager = ConfigManager()
+
+    assert config_manager.getConfigValue("key1") == "value1"
+    assert config_manager.getConfigValue("group.subkey", "default") == "subvalue"
+    assert config_manager.getConfigValue("nonexistent.key", "default") == "default"
 
 
-def test_load_non_existing_config(config_manager: ConfigManager) -> None:
-    config_manager.loadConfigFile(NON_EXISTING_CONFIG_PATH)
-    assert os.path.samefile(config_manager.getCurrentFilePath(), DEFAULT_CONFIG_PATH)
+def test_set_config_value(mocker, default_config):
+    """Tests sending values to config.yaml"""
+    mocker.patch("os.path.exists", return_value=False)
+    mocker.patch("builtins.open", mock_open(read_data=default_config))
+
+    config_manager = ConfigManager()
+
+    config_manager.setConfigValue("key1", "newvalue1")
+    config_manager.setConfigValue("group.subkey", "newgroupvalue")
+
+    assert config_manager.getConfigValue("key1") == "newvalue1"
+    assert config_manager.getConfigValue("group.subkey") == "newgroupvalue"
 
 
-def test_load_other_custom_config_from_custom(config_manager: ConfigManager) -> None:
-    """
-    If a custom config has been loaded and the user wants to load
-    another custom config, update custom config path in default config.
-    """
-    config_manager.loadConfigFile(CUSTOM_CONFIG_PATH)
-    config_manager.loadConfigFile(OTHER_CUSTOM_CONFIG_PATH)
-    assert os.path.samefile(
-        config_manager.getCurrentFilePath(), OTHER_CUSTOM_CONFIG_PATH
-    )
-    # Check that custom path has been updated in default config
-    config_manager.selected_config_path = DEFAULT_CONFIG_PATH
-    config_manager.loadConfig(DEFAULT_CONFIG_PATH)
-    saved_path = config_manager.getConfigValue(CfgPaths.CUSTOM_CONFIG_PATH.value, None)
-    assert os.path.samefile(saved_path, OTHER_CUSTOM_CONFIG_PATH)
-    # Remove custom config path in default yaml at end of test
-    config_manager.setConfigValue(CfgPaths.CUSTOM_CONFIG_PATH.value, None)
+def test_is_custom_config(mocker, custom_config):
+    """Tests whether the use of custom.yaml is correctly detected"""
+    mocker.patch("os.path.exists", return_value=True)
+    mocker.patch("builtins.open", mock_open(read_data=custom_config))
+
+    config_manager = ConfigManager()
+
+    assert config_manager.isCustomConfig()
 
 
-def test_load_default_config_from_custom(config_manager: ConfigManager) -> None:
-    """
-    If a custom config has been loaded and the user wants to load
-    the default config, remove custom config path from default config.
-    """
-    if not os.path.samefile(config_manager.getCurrentFilePath(), CUSTOM_CONFIG_PATH):
-        config_manager.loadConfigFile(CUSTOM_CONFIG_PATH)
-    config_manager.loadConfigFile(DEFAULT_CONFIG_PATH)
-    saved_path = config_manager.getConfigValue(CfgPaths.CUSTOM_CONFIG_PATH.value, None)
-    assert saved_path == None
+def test_update_custom_config(mocker, custom_config):
+    """Tests updating the custom.yaml configuration using a file-like object"""
+    mocker.patch("os.path.exists", return_value=True)
+    mock_open_obj = mock_open()
+    mocker.patch("builtins.open", mock_open_obj)
+
+    config_manager = ConfigManager()
+
+    # Simulate a file upload (streamlit_file_uploader is expected to be a file-like object)
+    file_mock = mock_open(read_data=custom_config).return_value
+
+    config_manager.updateCustomConfig(file_mock)
+
+    # Ensure the config dictionary is updated correctly
+    assert config_manager.getConfigValue("key1") == "custom_value"
+    assert config_manager.getConfigValue("group.subkey") == "custom_subvalue"
+
+    # Verify that saveConfig() was called, meaning the file was written
+    mock_open_obj.assert_called_with(config_manager.getCurrentFilePath(), "w")
