@@ -53,3 +53,4 @@ jobs:
           subject-name: ghcr.io/aaronpb/force-platform-app
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
+          github-token: ${{ secrets.TENTACLE }}
