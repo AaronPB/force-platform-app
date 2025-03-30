@@ -3,9 +3,6 @@ name: Docker Image CI for GHCR and DockerHub
 on:
   release:
     types: [published]
-  push:
-    branches: [master]
-    paths: [.github/workflows/docker_image.yaml]
 
 jobs:
   push_to_registries:
@@ -46,7 +43,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: false
+          push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
@@ -55,4 +52,4 @@ jobs:
         with:
           subject-name: ghcr.io/aaronpb/force-platform-app
           subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: false
+          push-to-registry: true
