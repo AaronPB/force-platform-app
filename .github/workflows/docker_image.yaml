@@ -50,6 +50,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: ghcr.io/aaronpb/force-platform-app:latest
+          subject-name: ghcr.io/aaronpb/force-platform-app
           subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+          push-to-registry: false
