@@ -3,6 +3,9 @@ name: Docker Image CI for GHCR and DockerHub
 on:
   release:
     types: [published]
+  push:
+    branches: [master]
+    paths: [.github/workflows/docker_image.yaml]
 
 jobs:
   push_to_registries:
@@ -43,14 +46,13 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          push: true
+          push: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-          provenance: true
 
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
           subject-name: ghcr.io/aaronpb/force-platform-app
           subject-digest: ${{ steps.push.outputs.digest }}
-          push-to-registry: true
+          push-to-registry: false
