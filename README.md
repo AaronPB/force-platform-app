@@ -32,8 +32,11 @@ Here is a setup example to run it locally through commands, in a Linux-based dis
 
 ```bash
 docker pull aaronrpb/force-platform-app:latest
-docker run -d --name example_app --device /dev/usb:/dev/usb -p 8501:8501 force-platform-app
+docker run -d --name example_app --device /dev/usb:/dev/usb -p 8501:8501 aaronrpb/force-platform-app
 ```
+
+> Make sure you have USB sensors connected or the `--device /dev/usb:/dev/usb` will throw a `no such file or directory` error.
+> If you want just to check the container content without sensors, remove that option from de `docker run` command.
 
 And done! Check it out on [http://localhost:8501](http://localhost:8501).
 
