@@ -35,8 +35,8 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           images: |
-            aaronrpb/force-platform-app
             ghcr.io/aaronpb/force-platform-app
+            aaronrpb/force-platform-app
 
       - name: Build and push Docker images
         id: push
@@ -50,6 +50,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v2
         with:
-          subject-name: ghcr.io/aaronpb/force-platform-app
+          subject-name: ghcr.io/aaronpb/force-platform-app:latest
           subject-digest: ${{ steps.push.outputs.digest }}
           push-to-registry: true
