@@ -37,7 +37,7 @@ COPY requirements.txt requirements.txt
 
 # Use python3 -m pip to install dependencies
 RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install -r requirements-dev.txt
+RUN python3 -m pip install -r requirements.txt
 
 # Define workdir and copy project
 ENV prj_dir=/app/
