@@ -118,10 +118,34 @@ class PlatformForcesFigure:
 
         self.figure.update_layout(
             title=self.title,
-            xaxis3_title=self.x_label,
-            yaxis_title=self.y_label,
-            yaxis2_title=self.y_label,
-            yaxis3_title=self.y_label,
+            xaxis1=dict(
+                showgrid=True,
+                showline=True,
+            ),
+            xaxis2=dict(
+                showgrid=True,
+                showline=True,
+            ),
+            xaxis3=dict(
+                title=self.x_label,
+                showgrid=True,
+                showline=True,
+            ),
+            yaxis=dict(
+                title=self.y_label,
+                showgrid=True,
+                showline=True,
+            ),
+            yaxis2=dict(
+                title=self.y_label,
+                showgrid=True,
+                showline=True,
+            ),
+            yaxis3=dict(
+                title=self.y_label,
+                showgrid=True,
+                showline=True,
+            ),
             height=700,
         )
         return self.figure
@@ -194,7 +218,19 @@ class PlatformCOPFigure:
 
         self.figure.update_layout(
             title=self.title,
-            xaxis_title=self.x_label,
-            yaxis_title=self.y_label,
+            xaxis=dict(
+                title=self.x_label,
+                showgrid=True,
+                zeroline=True,
+                zerolinewidth=2,
+                showline=True,
+            ),
+            yaxis=dict(
+                title=self.y_label,
+                showgrid=True,
+                zeroline=True,
+                zerolinewidth=2,
+                showline=True,
+            ),
         )
         return self.figure

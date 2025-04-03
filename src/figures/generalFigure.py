@@ -75,7 +75,15 @@ class GeneralFigure:
 
         self.figure.update_layout(
             title=self.title,
-            xaxis_title=self.x_label,
-            yaxis_title=self.y_label,
+            xaxis=dict(
+                title=self.x_label,
+                showgrid=True,
+                showline=True,
+            ),
+            yaxis=dict(
+                title=self.y_label,
+                showgrid=True,
+                showline=True,
+            ),
         )
         return self.figure
