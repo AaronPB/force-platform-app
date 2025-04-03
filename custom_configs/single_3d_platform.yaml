@@ -1,0 +1,133 @@
+settings:
+  config:
+    name: Single 3D force platform config
+    version: 2.0
+  test:
+    name: Single_FP_Test
+  recording:
+    data_interval_ms: 10
+    tare_data_amount: 300
+  filter:
+    fc_hz: 5.0
+    order: 6
+sensor_groups:
+  platform_1:
+    name: Platform 1
+    type: GROUP_PLATFORM
+    read: true
+    sensor_list:
+    - p1_z1
+    - p1_z2
+    - p1_z3
+    - p1_z4
+    - p1_x1
+    - p1_x3
+    - p1_y1
+    - p1_y3
+sensors:
+  p1_z1:
+    name: P1_LoadCell_Z_1
+    type: SENSOR_LOADCELL
+    read: true
+    connection:
+      channel: 0
+      serial: 582535
+    properties:
+      serial_number: Y2131167
+      max_weight: 150kg
+    calibration:
+      slope: 1460645.82
+      intercept: 0
+  p1_z2:
+    name: P1_LoadCell_Z_2
+    type: SENSOR_LOADCELL
+    read: true
+    connection:
+      channel: 1
+      serial: 582535
+    properties:
+      serial_number: Y2131169
+      max_weight: 150kg
+    calibration:
+      slope: 1458448.41
+      intercept: 0
+  p1_z3:
+    name: P1_LoadCell_Z_3
+    type: SENSOR_LOADCELL
+    read: true
+    connection:
+      channel: 2
+      serial: 582535
+    properties:
+      serial_number: W020822
+      max_weight: 150kg
+    calibration:
+      slope: 1467890.08
+      intercept: 0
+  p1_z4:
+    name: P1_LoadCell_Z_4
+    type: SENSOR_LOADCELL
+    read: true
+    connection:
+      channel: 3
+      serial: 582535
+    read_data: true
+    properties:
+      serial_number: Y2131168
+      max_weight: 150kg
+    calibration:
+      slope: 1461505.74
+      intercept: 0
+  p1_x1:
+    name: P1_LoadCell_X_1
+    type: SENSOR_LOADCELL
+    read: true
+    connection:
+      channel: 0
+      serial: 588715
+    properties:
+      serial_number: TT805051
+      max_weight: 110kg
+    calibration:
+      slope: 1060343.01
+      intercept: 0
+  p1_x3:
+    name: P1_LoadCell_X_3
+    type: SENSOR_LOADCELL
+    read: true
+    connection:
+      channel: 1
+      serial: 588715
+    properties:
+      serial_number: TT805061
+      max_weight: 110kg
+    calibration:
+      slope: 1074759.37
+      intercept: 0
+  p1_y1:
+    name: P1_LoadCell_Y_1
+    type: SENSOR_LOADCELL
+    read: true
+    connection:
+      channel: 2
+      serial: 588715
+    properties:
+      serial_number: TT805051
+      max_weight: 110kg
+    calibration:
+      slope: 1060343.01
+      intercept: 0
+  p1_y3:
+    name: P1_LoadCell_Y_3
+    type: SENSOR_LOADCELL
+    read: true
+    connection:
+      channel: 3
+      serial: 588715
+    properties:
+      serial_number: TT805061
+      max_weight: 110kg
+    calibration:
+      slope: 1074759.37
+      intercept: 0
+
