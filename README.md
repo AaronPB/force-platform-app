@@ -28,15 +28,26 @@ The documentation is available within the software, making it convenient to chec
 2. Pull the docker image from [DockerHub](https://hub.docker.com/r/aaronrpb/force-platform-app) or the GitHub Container Registry.
 3. Start the container and try it out by going to the specified port.
 
-Here is a setup example to run it locally through commands, in a Linux-based distro:
+Here is a setup example to run it with phidgetbridge-based sensors and IMUs:
+
+Pull the image.
 
 ```bash
 docker pull aaronrpb/force-platform-app:latest
-docker run -d --name example_app --device /dev/usb:/dev/usb -p 8501:8501 aaronrpb/force-platform-app
 ```
 
-> Make sure you have USB sensors connected or the `--device /dev/usb:/dev/usb` will throw a `no such file or directory` error.
-> If you want just to check the container content without sensors, remove that option from de `docker run` command.
+Create a new container called `example_app` and link the required device paths.
+
+> Make sure you have USB sensors connected to the delivered paths in `--device`, or the daemon will throw a `no such file or directory` error.
+> If you want just to check the container content without sensors, remove the `--device` options from de `docker run` command.
+
+```bash
+docker run -d --name example_app \
+  --device /dev/bus/usb:/dev/bus/usb \
+  --device /dev/serial:/dev/serial \
+  -p 8501:8501 \
+  aaronrpb/force-platform-app
+```
 
 And done! Check it out on [http://localhost:8501](http://localhost:8501).
 
@@ -45,6 +56,15 @@ And done! Check it out on [http://localhost:8501](http://localhost:8501).
 > Additionally, reconnecting devices during runtime may cause errors or connection failures.
 >
 > To avoid these issues, you can use the `--privileged` flag when running the container, though this is not recommended due to security concerns:
+>
 > ```bash
 > docker run -d --name example_app --privileged -p 8501:8501 force-platform-app
 > ```
+
+## Managing the Application
+
+Once you run `docker run`, you can stop the app with `docker stop <container_name>` and restart it with `docker start <container_name>`.
+
+You can algo check the app [logs](https://docs.docker.com/reference/cli/docker/container/logs/), with `docker logs <container_name>`.
+
+More information about docker CLI commands: [https://docs.docker.com/reference/cli/docker/](https://docs.docker.com/reference/cli/docker/).
