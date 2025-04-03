@@ -167,7 +167,46 @@ def sensor_settings():
             "There is no sensor group information available!", icon=":material/report:"
         )
     elif len(sensor_groups) == 1:
-        # TODO Build single window instead of tabs
+        group = sensor_groups[0]
+        df = pd.DataFrame(
+            {
+                "ID": [sensor.getID() for sensor in group.getSensors().values()],
+                "Connect": [sensor.getRead() for sensor in group.getSensors().values()],
+                "Name": [sensor.getName() for sensor in group.getSensors().values()],
+                "Type": [
+                    sensor.getType().value for sensor in group.getSensors().values()
+                ],
+                "Status": [
+                    sensor.getStatus().value for sensor in group.getSensors().values()
+                ],
+            }
+        )
+        st.toggle(
+            label="Disable entire sensor group",
+            key=f"group_toggle",
+            value=not group.getRead(),
+            help="Ignores and does not connect to enabled sensors of this group.",
+        )
+        if group.getRead() == st.session_state[f"group_toggle"]:
+            st.session_state.sensor_mngr.setSensorRead(
+                not group.getRead(), group.getID()
+            )
+            st.rerun()
+        edited_df = st.data_editor(
+            data=df,
+            key=f"edited_df",
+            use_container_width=True,
+            hide_index=True,
+            column_order=("Connect", "Name", "Type", "Status"),
+            disabled=("Name", "Type", "Status"),
+        )
+        changed_sensors = df[df["Connect"] != edited_df["Connect"]]
+        if not changed_sensors.empty:
+            for index, row in changed_sensors.iterrows():
+                st.session_state.sensor_mngr.setSensorRead(
+                    not row["Connect"], group.getID(), row["ID"]
+                )
+            st.rerun()
         return
 
     tab_names = [group.getName() for group in sensor_groups]
