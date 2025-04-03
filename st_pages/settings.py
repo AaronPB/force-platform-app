@@ -33,7 +33,6 @@ def config_settings():
     if file_upload is not None:
         st.session_state.config_mngr.updateCustomConfig(file_upload)
         st.session_state.sensor_mngr.setup(st.session_state.config_mngr)
-        st.rerun()
 
     with st.expander(
         "Configuration file information", icon=":material/document_scanner:"
