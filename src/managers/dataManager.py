@@ -339,11 +339,11 @@ class DataManager:
         df_fx = self.df_filtered[keys_tuple[0]]
         df_fy = self.df_filtered[keys_tuple[1]]
         df_fz = self.df_filtered[keys_tuple[2]]
-        if "_COP" in platform_name:
+        if platform_name.endswith("_COP"):
             [copx, copy] = self.getPlatformCOP(df_fx, df_fy, df_fz)
             [ellipx, ellipy, area] = self.getEllipseFromCOP([copx, copy])
             figure = PlatformCOPFigure(f"Platform figure {platform_name}")
             return figure.getFigure(copx, copy, ellipx, ellipy, area)
-        if "_FORCES" in platform_name:
+        if platform_name.endswith("_FORCES"):
             figure = PlatformForcesFigure(f"Platform figure {platform_name}")
             return figure.getFigure(df_fx, df_fy, df_fz, pd.Series(self.timeincr_list))

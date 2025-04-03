@@ -86,6 +86,7 @@ class PlatformForcesFigure:
                             width=self.line_width,
                         ),
                         name=column,
+                        showlegend=False,
                     ),
                     row=i + 1,
                     col=1,
@@ -97,7 +98,7 @@ class PlatformForcesFigure:
                             y=values[column].iloc[marker_indexes],
                             mode="markers",
                             marker=dict(
-                                symbol=self.markers[j % len(self.markers)],
+                                symbol=self.markers[i % len(self.markers)],
                                 color=self.colors[j % len(self.colors)],
                                 size=10,
                             ),
@@ -133,6 +134,8 @@ class PlatformCOPFigure:
         self.x_label = "Medio-Lateral (mm)"
         self.y_label = "Anterior-Posterior (mm)"
 
+        self.buildTraces()
+
     def buildTraces(self) -> None:
         default_ellipse_trace = go.Scatter(
             x=[0],
@@ -149,7 +152,6 @@ class PlatformCOPFigure:
             mode="lines",
             line=dict(color="blue"),
             name="COP",
-            showlegend=False,
         )
         default_ellipse_text_trace = go.Scatter(
             x=[0],
