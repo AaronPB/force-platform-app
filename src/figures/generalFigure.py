@@ -15,7 +15,6 @@ class GeneralFigure:
             "#ff0000",
             "#00ff00",
             "#0000ff",
-            "#ffffff",
             "#ff00cc",
             "#ffcc00",
         ]
@@ -25,7 +24,6 @@ class GeneralFigure:
             "diamond",
             "triangle-up",
             "hexagon",
-            "y-down",
         ]
         self.line_width = 2
 

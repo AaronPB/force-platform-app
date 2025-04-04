@@ -25,9 +25,9 @@ class PlatformForcesFigure:
 
         # Plot style variables
         self.colors = [
+            "#ff0000",
             "#00ff00",
             "#0000ff",
-            "#ffffff",
             "#ff00cc",
             "#ffcc00",
         ]
@@ -37,7 +37,6 @@ class PlatformForcesFigure:
             "diamond",
             "triangle-up",
             "hexagon",
-            "y-down",
         ]
         self.line_width = 1
         self.total_line_width = 2
