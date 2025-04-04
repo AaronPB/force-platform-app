@@ -11,8 +11,8 @@ on:
     paths:
     - 'app.py'
     - 'pytest.ini'
-    - 'src/*'
-    - 'tests/*'
+    - 'src/**/*'
+    - 'tests/**/*'
 
 jobs:
   test:
