@@ -1,0 +1,38 @@
+settings:
+  config:
+    name: Two IMUs config
+    version: 2.0
+  test:
+    name: Two_IMUs_test
+  recording:
+    data_interval_ms: 10
+    tare_data_amount: 300
+  filter:
+    fc_hz: 5.0
+    order: 6
+sensor_groups:
+  imus:
+    name: Body IMUs
+    type: GROUP_DEFAULT
+    read: true
+    sensor_list:
+    - imu_1
+    - imu_2
+sensors:
+  imu_1:
+    name: IMU Sensor 1
+    type: SENSOR_IMU
+    read: true
+    connection:
+      serial: /dev/ttyUSB0
+    properties:
+      tag: IMU_1
+  imu_2:
+    name: IMU Sensor 2
+    type: SENSOR_IMU
+    read: true
+    connection:
+      serial: /dev/ttyUSB1
+    properties:
+      tag: IMU_2
+
