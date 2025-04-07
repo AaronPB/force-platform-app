@@ -480,7 +480,7 @@ def configDetails() -> None:
         type: SENSOR_IMU
         read: true
         connection:
-          serial: /dev/serial/by-path/pci-0000:00:14.0-usb-0:1.1.4.3:1.0-port0
+          serial: /dev/ttyUSB0
         properties:
           tag: IMU_1
         ```
@@ -502,7 +502,7 @@ def configDetails() -> None:
                     "Sensor name.",
                     "Sensor type: SENSOR_IMU.",
                     "Enable or disable sensor data recording. Can be modified in GUI.",
-                    "Absolute USB path. Use: ll /dev/serial/by-path/",
+                    "USB path. Use: `ll /dev/serial/by-path/` to assure symlinks to ttyUSB, if provided.",
                     "(Could be empty) Configuration section to provide more information.",
                 ],
             }
