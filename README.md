@@ -28,6 +28,9 @@ The documentation is available within the software, making it convenient to chec
 2. Pull the docker image from [DockerHub](https://hub.docker.com/r/aaronrpb/force-platform-app) or the GitHub Container Registry.
 3. Start the container and try it out by going to the specified port.
 
+> [!tip]
+> Need more detailed information? Check out the setup steps for [Linux distros](https://aaronpb.github.io/force_platform/software/docker_streamlit/setup/project_linux/) or [Windows](https://aaronpb.github.io/force_platform/software/docker_streamlit/setup/project_windows/).
+
 Here is a setup example to run it with phidgetbridge-based sensors and IMUs:
 
 Pull the image.
@@ -43,8 +46,9 @@ Create a new container called `example_app` and link the required device paths.
 
 ```bash
 docker run -d --name example_app \
-  --device /dev/bus/usb:/dev/bus/usb \
-  --device /dev/serial:/dev/serial \
+  --device /dev/bus/usb \
+  --device /dev/ttyUSB0 \
+  --device /dev/ttyUSB1 \
   -p 8501:8501 \
   aaronrpb/force-platform-app
 ```
@@ -58,7 +62,7 @@ And done! Check it out on [http://localhost:8501](http://localhost:8501).
 > To avoid these issues, you can use the `--privileged` flag when running the container, though this is not recommended due to security concerns:
 >
 > ```bash
-> docker run -d --name example_app --privileged -p 8501:8501 force-platform-app
+> docker run -d --name example_app --privileged -p 8501:8501 aaronrpb/force-platform-app
 > ```
 
 ## Managing the Application
