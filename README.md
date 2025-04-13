@@ -13,6 +13,10 @@
 
 A python software for synchronized data management of specific force platforms sensors compatible with Phidget API and other sensor types such as IMUs.
 
+<p align="center">
+  <a href="#readme"><img alt="Force platform app showcase" src="images/force-platform-app-showcase.gif"></a>
+</p>
+
 > [!note]
 > This repository contains a dockerized streamlit version of the [force_platform](https://aaronpb.github.io/force_platform/) project, available on [this repository](https://github.com/AaronPB/force_platform).
 
