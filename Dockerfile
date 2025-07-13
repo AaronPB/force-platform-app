@@ -32,7 +32,7 @@ RUN apt-get update && apt-get install -y \
     python3-pymrpt
 
 # Install uv
-COPY --from=ghcr.io/astral-sh/uv:0.7.2 /uv /uvx /bin/
+COPY --from=ghcr.io/astral-sh/uv:0.7.20 /uv /uvx /bin/
 
 # Define workdir and copy project
 ENV prj_dir=/app/
