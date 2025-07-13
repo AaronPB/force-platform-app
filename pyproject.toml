@@ -1,0 +1,33 @@
+[project]
+name = "force-platform-app"
+version = "0.1.0"
+authors = [{ name = "AaronPB", email = "aaron.poyatos@ual.es" }]
+description = "A dockerized streamlit app of the Force Platform Reader software"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+dependencies = [
+    "loguru>=0.7.3",
+    "phidget22>=1.22.20250422",
+    "plotly>=6.2.0",
+    "pyyaml>=6.0.2",
+    "scikit-learn>=1.7.0",
+    "streamlit>=1.46.1",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "coverage>=7.9.2",
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
+    "pytest-mock>=3.14.1",
+]
+
+[[project.urls]]
+name = "Homepage"
+url = "https://github.com/AaronPB/force_platform"
+
+[[project.urls]]
+name = "Documentation"
+url = "https://aaronpb.github.io/force_platform"

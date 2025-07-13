@@ -31,21 +31,19 @@ RUN apt-get update && apt-get install -y \
     mrpt-apps \
     python3-pymrpt
 
-# Install python and python dependencies
-COPY requirements-dev.txt requirements-dev.txt
-COPY requirements.txt requirements.txt
-
-# Use python3 -m pip to install dependencies
-RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install -r requirements.txt
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:0.7.2 /uv /uvx /bin/
 
 # Define workdir and copy project
 ENV prj_dir=/app/
 WORKDIR ${prj_dir}
 COPY . ${prj_dir}
 
+RUN uv venv --system-site-packages &&\
+    uv sync --locked
+
 EXPOSE 8501
 
 HEALTHCHECK CMD curl --fail http://localhost:8501/_store/health
 
-ENTRYPOINT ["streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
+ENTRYPOINT ["uv", "run", "streamlit", "run", "app.py", "--server.port=8501", "--server.address=0.0.0.0"]
