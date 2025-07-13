@@ -1,7 +1,7 @@
 {
     "name": "force-platform-app-dev",
     "build": {
-      "dockerfile": "../Dockerfile.dev",
+      "dockerfile": "Dockerfile",
       "context": ".."
     },
     "runArgs": [

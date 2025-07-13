@@ -5,9 +5,7 @@ LABEL maintainer="AaronPB"
 RUN apt-get update && apt-get install -y \
     curl \
     software-properties-common \
-    git \
     python3 \
-    python3-venv \
     python3-pip
 
 # MRPT requires tzdata package to be configured
@@ -25,10 +23,13 @@ RUN apt-get update && apt-get install -y \
     mrpt-apps \
     python3-pymrpt
 
-# Install python and python dependencies
-COPY requirements-dev.txt requirements-dev.txt
-COPY requirements.txt requirements.txt
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:0.7.20 /uv /uvx /bin/
 
-# Use python3 -m pip to install dependencies
-RUN python3 -m pip install --upgrade pip
-RUN python3 -m pip install -r requirements-dev.txt
+# Define workdir and copy project
+ENV prj_dir=/app/
+WORKDIR ${prj_dir}
+COPY . ${prj_dir}
+
+RUN uv venv --system-site-packages &&\
+    uv sync --locked --all-groups

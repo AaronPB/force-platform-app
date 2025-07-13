@@ -1,8 +1,0 @@
-# Base requirements
--r requirements.txt
-
-# Test modules
-black
-pytest
-pytest-cov
-pytest-mock
