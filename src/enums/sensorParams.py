@@ -30,3 +30,4 @@ class SGParams(Enum):
     TYPE = "type"
     READ = "read"
     SENSOR_LIST = "sensor_list"
+    G_MATRIX = "g_matrix"

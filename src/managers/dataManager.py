@@ -39,6 +39,8 @@ class DataManager:
         self.platform_fx_names: list[str] = ["X_1", "X_2", "X_3", "X_4"]
         self.platform_fy_names: list[str] = ["Y_1", "Y_2", "Y_3", "Y_4"]
         self.platform_fz_names: list[str] = ["Z_1", "Z_2", "Z_3", "Z_4"]
+        # Platform geometric matrix for COP
+        self.platform_g_matrix: dict[str, np.array] = {}
 
     def clearDataFrames(self) -> None:
         self.df_raw: pd.DataFrame = pd.DataFrame()
@@ -64,14 +66,17 @@ class DataManager:
                     self.platform_figure_structs[group.getName() + "_FORCES"] = (
                         valid_sensors
                     )
-                # Check 2 Fx, 2 Fy and 4 Fz sensors available for valid COP
+                # Check it at least two sensors in X,Y,Z axis are available for valid COP
                 if (
-                    len(valid_sensors[0]) == 2
-                    and len(valid_sensors[1]) == 2
-                    and len(valid_sensors[2]) == 4
+                    len(valid_sensors[0]) > 1
+                    and len(valid_sensors[1]) > 1
+                    and len(valid_sensors[2]) > 1
                 ):
                     self.platform_figure_structs[group.getName() + "_COP"] = (
                         valid_sensors
+                    )
+                    self.platform_g_matrix[group.getName() + "_COP"] = np.array(
+                        group.g_matrix
                     )
             # Store available sensor data from group
             for sensor in group.getSensors(only_available=True).values():
@@ -230,46 +235,31 @@ class DataManager:
     # - Platform group methods
 
     def getPlatformCOP(
-        self, df_fx: pd.DataFrame, df_fy: pd.DataFrame, df_fz: pd.DataFrame
+        self, df_fx: pd.DataFrame, df_fy: pd.DataFrame, df_fz: pd.DataFrame, G: np.array
     ) -> tuple[pd.Series, pd.Series]:
-        # Platform dimensions
-        lx = 506  # mm
-        ly = 306  # mm
-        h = 50.6  # mm
-        # Get sum forces
-        fx = df_fx.iloc[:, 0] - df_fx.iloc[:, 1]
-        fy = df_fy.iloc[:, 0] - df_fy.iloc[:, 1]
-        fz = df_fz.sum(axis=1)
-        # Operate
-        mx = (
-            ly
-            / 2
-            * (
-                -df_fz.iloc[:, 0]
-                - df_fz.iloc[:, 1]
-                + df_fz.iloc[:, 2]
-                + df_fz.iloc[:, 3]
+        # Get forces
+        f = np.hstack([df_fx.values, df_fy.values, df_fz.values])
+        if f.shape[1] != G.shape[1]:
+            n = len(df_fz)
+            logger.error(
+                f"Shapes do not match! force column matrix shape is {f.shape} and G matrix shape in config is {G.shape}! Returning zero values."
             )
-            + h * fy
-        )
-        my = (
-            lx
-            / 2
-            * (
-                df_fz.iloc[:, 0]
-                - df_fz.iloc[:, 1]
-                - df_fz.iloc[:, 2]
-                + df_fz.iloc[:, 3]
-            )
-            - h * fx
-        )
+            return [pd.Series(np.zeros(n)), pd.Series(np.zeros(n))]
+        F = f @ G.T
+        fx = F[:, 0]
+        fy = F[:, 1]
+        fz = F[:, 2]
+        mx = F[:, 3]
+        my = F[:, 4]
+        mz = F[:, 5]
+
         # Get COP
         cop_x = -my / fz
         cop_y = mx / fz
         # Get relative COP
         cop_x = cop_x - np.mean(cop_x)
         cop_y = cop_y - np.mean(cop_y)
-        return [cop_x, cop_y]
+        return [pd.Series(cop_x), pd.Series(cop_y)]
 
     def getEllipseFromCOP(
         self, cop: tuple[pd.Series, pd.Series]
@@ -340,7 +330,9 @@ class DataManager:
         df_fy = self.df_filtered[keys_tuple[1]]
         df_fz = self.df_filtered[keys_tuple[2]]
         if platform_name.endswith("_COP"):
-            [copx, copy] = self.getPlatformCOP(df_fx, df_fy, df_fz)
+            [copx, copy] = self.getPlatformCOP(
+                df_fx, df_fy, df_fz, self.platform_g_matrix[platform_name]
+            )
             [ellipx, ellipy, area] = self.getEllipseFromCOP([copx, copy])
             figure = PlatformCOPFigure(f"Platform figure {platform_name}")
             return figure.getFigure(copx, copy, ellipx, ellipy, area)

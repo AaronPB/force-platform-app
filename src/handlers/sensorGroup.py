@@ -16,6 +16,8 @@ class SensorGroup:
         self.status: SGStatus = SGStatus.IGNORED
         self.active: bool = False
         self.sensors: dict[str, Sensor] = {}
+        # Geometric matrix (only for force platform types)
+        self.g_matrix: list[list[float]] = [[0]]
 
     def addSensor(self, sensor: Sensor):
         self.sensors[sensor.id] = sensor

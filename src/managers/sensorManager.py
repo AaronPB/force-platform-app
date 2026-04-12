@@ -90,6 +90,19 @@ class SensorManager:
         if sensor_group.getSize() == 0:
             logger.error(f"Sensor group {id} is empty. Not loaded.")
             return None
+        # Load geometric matrix if provided by config
+        if content.get(SGParams.G_MATRIX.value) is not None:
+            g_matrix: list[list[float]] = content[SGParams.G_MATRIX.value]
+            n = len(g_matrix[0])
+            if all(len(row) == n for row in g_matrix):
+                sensor_group.g_matrix = content[SGParams.G_MATRIX.value]
+                logger.info(
+                    f"Sensor group {id} geometric matrix has been loaded successfully!"
+                )
+            else:
+                logger.warning(
+                    f"Sensor group {id} geometric matrix is unstable! Ignoring"
+                )
         return sensor_group
 
     def loadSensor(self, id: str) -> Sensor:
