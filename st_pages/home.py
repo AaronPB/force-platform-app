@@ -46,7 +46,7 @@ def generalSensorsDocs() -> None:
         label="Or download the default config file",
         key="download_btn_default_config",
         type="secondary",
-        use_container_width=True,
+        width='stretch',
         file_name="config.yaml",
         help="Download the default config file to customize it",
         data=config_file,
@@ -97,7 +97,7 @@ def generalSensorsDocs() -> None:
             }
         ),
         hide_index=True,
-        use_container_width=True,
+        width='stretch',
     )
     st.info(
         "To be able to preform tests, at least one sensor must be available.",
@@ -129,7 +129,7 @@ def generalTestDocs() -> None:
             }
         ),
         hide_index=True,
-        use_container_width=True,
+        width='stretch',
     )
     st.info(
         "When settings are modified, the changes are also saved in the configuration file.",
@@ -269,7 +269,7 @@ def configDetails() -> None:
         label="Download the default config file",
         key="download_button_default_config",
         type="secondary",
-        use_container_width=True,
+        width='stretch',
         file_name="config.yaml",
         help="Download the default config file to customize it",
         data=config_file,
@@ -397,7 +397,7 @@ def configDetails() -> None:
             }
         ),
         hide_index=True,
-        use_container_width=True,
+        width='stretch',
     )
     ## Encoder sensors
     sensor_encoder_col_1, sensor_encoder_col_2 = sensor_tab_encoder.columns(2)
@@ -468,7 +468,7 @@ def configDetails() -> None:
             }
         ),
         hide_index=True,
-        use_container_width=True,
+        width='stretch',
     )
     ## IMU sensors
     sensor_imu_col_1, sensor_imu_col_2 = sensor_tab_imu.columns(2)
@@ -508,7 +508,7 @@ def configDetails() -> None:
             }
         ),
         hide_index=True,
-        use_container_width=True,
+        width='stretch',
     )
     st.subheader("Sensor group types")
     group_tab_default, group_tab_platform = st.tabs(
@@ -550,7 +550,7 @@ def configDetails() -> None:
             }
         ),
         hide_index=True,
-        use_container_width=True,
+        width='stretch',
     )
     ## Platform group
     group_platform_col_1, group_platform_col_2 = group_tab_platform.columns(2)
@@ -599,7 +599,7 @@ def configDetails() -> None:
     group_platform_col_2.image(
         image="images/platform.png",
         caption="Platform sensor locations",
-        use_container_width=True,
+        width='stretch',
     )
     group_tab_platform.dataframe(
         pd.DataFrame(
@@ -615,7 +615,7 @@ def configDetails() -> None:
             }
         ),
         hide_index=True,
-        use_container_width=True,
+        width='stretch',
     )
 
 
@@ -650,7 +650,7 @@ def homePage():
     _, img_col, _ = st.columns([0.2, 0.6, 0.2])
     img_col.image(
         image="images/force_platform_logo.png",
-        use_container_width=True,
+        width='stretch',
     )
     st.title("Welcome to Force Platform Reader")
     st.write(

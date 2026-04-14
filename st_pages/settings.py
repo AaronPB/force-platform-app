@@ -58,7 +58,7 @@ def config_settings():
         file_info_col_2.download_button(
             label="Download file",
             type="secondary",
-            use_container_width=True,
+            width='stretch',
             file_name=config_file_name,
             help="Download the configuration file",
             data=config_file,
@@ -96,7 +96,7 @@ def config_settings():
                     "IMUs": [sensor_info[2] for sensor_info in sensors_info.values()],
                 }
             )
-            st.dataframe(sensors_df, use_container_width=True, hide_index=True)
+            st.dataframe(sensors_df, width='stretch', hide_index=True)
 
     # Test settings
     st.subheader("Test settings")
@@ -194,7 +194,7 @@ def sensor_settings():
         edited_df = st.data_editor(
             data=df,
             key=f"edited_df",
-            use_container_width=True,
+            width='stretch',
             hide_index=True,
             column_order=("Connect", "Name", "Type", "Status"),
             disabled=("Name", "Type", "Status"),
@@ -239,7 +239,7 @@ def sensor_settings():
             edited_df = st.data_editor(
                 data=df,
                 key=f"edited_df_{i}",
-                use_container_width=True,
+                width='stretch',
                 hide_index=True,
                 column_order=("Connect", "Name", "Type", "Status"),
                 disabled=("Name", "Type", "Status"),

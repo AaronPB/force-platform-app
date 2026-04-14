@@ -65,21 +65,21 @@ def control_panel():
         label="Start test",
         key="btn_test_start",
         type="primary",
-        use_container_width=True,
+        width='stretch',
         disabled=test_unavailable or st.session_state.test_recording,
     )
     btn_test_stop = panel_col_2.button(
         label="Stop test",
         key="btn_test_stop",
         type="primary",
-        use_container_width=True,
+        width='stretch',
         disabled=test_unavailable or not st.session_state.test_recording,
     )
     btn_test_tare = panel_col_3.button(
         label="Tare sensors",
         key="btn_test_tare",
         type="secondary",
-        use_container_width=True,
+        width='stretch',
         disabled=test_unavailable or not st.session_state.test_recording,
     )
 
@@ -184,13 +184,13 @@ def control_panel():
                 st.button(
                     label="Download CSV",
                     key=f"btn_download_df_{i}",
-                    # use_container_width=True,
+                    # width='stretch',
                     help="Download the following dataframe in CSV format.",
                     disabled=True,
                 )
                 st.dataframe(
                     data=pd.DataFrame({"timestamp": [0], "sensor_data": [0]}),
-                    use_container_width=True,
+                    width='stretch',
                 )
                 continue
             st.download_button(
@@ -202,7 +202,7 @@ def control_panel():
                 file_name=f"{file_name+file_suffixes[i]}.csv",
                 help="Download the following dataframe in CSV format.",
             )
-            st.dataframe(data=df, use_container_width=True)
+            st.dataframe(data=df, width='stretch')
 
     # If auto stop test is enabled, add stop process to a thread
     if st.session_state.test_toggle_auto_stop and st.session_state.test_recording:
