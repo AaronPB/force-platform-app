@@ -41,14 +41,18 @@ class PlatformForcesFigure:
         self.line_width = 1
         self.total_line_width = 2
 
+        self.buildTraces()
+
     def buildTraces(self) -> None:
-        default_sum_force = go.Scatter(
-            x=[0],
-            y=[0],
-            mode="lines",
-            line=dict(color="red", width=self.total_line_width),
-            name="Total force",
-        )
+        for i in range(3):
+            default_sum_force = go.Scatter(
+                x=[0],
+                y=[0],
+                mode="lines",
+                line=dict(color="red", width=self.total_line_width),
+                name="Total force",
+            )
+            self.figure.add_trace(default_sum_force, row=i + 1, col=1)
 
     def getFigure(
         self,
@@ -110,7 +114,7 @@ class PlatformForcesFigure:
             self.figure.update_traces(
                 x=x_values,
                 y=values.sum(axis=1),
-                selector="Total force",
+                selector=dict(name="Total force"),
                 row=i + 1,
                 col=1,
             )
